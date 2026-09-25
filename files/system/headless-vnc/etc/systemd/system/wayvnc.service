@@ -1,0 +1,29 @@
+[Unit]
+Description=wayvnc VNC server (bound to the Tailscale interface only)
+Documentation=man:wayvnc(1)
+After=hyprland-headless.service tailscaled.service network-online.target
+Wants=network-online.target
+Requires=hyprland-headless.service
+BindsTo=hyprland-headless.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=@USER@
+Group=@USER@
+# See hyprland-headless.service for why this is a dedicated runtime dir
+# and not /run/user/1000.
+Environment=XDG_RUNTIME_DIR=/run/@USER@-vnc
+Environment=WAYLAND_DISPLAY=wayland-1
+Environment=HOME=@HOME@
+# tailscaled.service being active doesn't mean the tailnet IP is assigned
+# yet (especially right after boot) -- wayvnc's config binds that address
+# literally, and will fail to start if it isn't there. Wait for it first.
+ExecStartPre=/usr/local/bin/wait-for-tailscale-ip.sh @TSIP@ 60
+ExecStart=/usr/bin/wayvnc
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

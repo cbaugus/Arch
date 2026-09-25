@@ -1,0 +1,30 @@
+[Unit]
+Description=Headless Hyprland compositor (virtual output for wayvnc)
+Documentation=https://wiki.hypr.land/
+After=seatd.service local-fs.target
+Requires=seatd.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=@USER@
+Group=@USER@
+# Dedicated runtime dir, deliberately NOT /run/user/<uid>: the user is also
+# used for interactive SSH logins, and /run/user/<uid> is owned/reaped by
+# systemd-logind based on login session lifetime. Tying this always-on
+# compositor to that path would risk logind removing it out from under
+# the service the moment an unrelated SSH session for that user ends.
+# Declared in /etc/tmpfiles.d/labs-vnc.conf (installed by install.sh).
+Environment=XDG_RUNTIME_DIR=/run/@USER@-vnc
+Environment=WAYLAND_DISPLAY=wayland-1
+Environment=HOME=@HOME@
+# waybar (and anything else that wants D-Bus, e.g. notifications) needs a
+# session bus; there's no login session here to provide one, so give the
+# whole compositor + its children a private one.
+ExecStart=/usr/bin/dbus-run-session -- /usr/bin/Hyprland --config @HOME@/.config/hypr-headless/hyprland.lua
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

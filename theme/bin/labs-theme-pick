@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Theme picker (Omarchy's theme switcher, rebuilt): wofi grid with each theme's preview.
+P=/usr/local/share/labs-theme; cur=$(cat ~/.local/state/labs-theme/current/name 2>/dev/null)
+pick=$( { for d in "$P"/themes/*/ ~/.config/labs-theme/themes/*/; do
+    [ -f "$d/colors.toml" ] || continue; n=$(basename "$d"); label=$n; [ "$n" = "$cur" ] && label="$n  (current)"
+    [ -f "$d/preview.png" ] && printf 'img:%s:text:%s\n' "$d/preview.png" "$label" || printf '%s\n' "$label"
+  done; } | wofi --dmenu --allow-images --prompt Theme --columns 3 --width 1200 --height 760 \
+      --define image_size=330 --cache-file /dev/null ) || exit 0
+pick=${pick##*:text:}; pick=${pick%%  (current)}
+[ -n "$pick" ] && exec labs-theme-set "$pick"

@@ -1,0 +1,126 @@
+// labs waybar -- rebuilt from Chris's Omarchy desktop bar (omarchy.menu, workspaces, indicators,
+// clock, weather, system-update, tray, bluetooth, network, audio, power), 2026-09-25.
+// Shared by the real SDDM session and the headless VNC session. Tokyo Night, JetBrainsMono Nerd Font.
+{
+  "layer": "top",
+  "position": "top",
+  "height": 26,
+  "spacing": 0,
+  "modules-left": [
+    "custom/menu",
+    "hyprland/workspaces"
+  ],
+  "modules-center": [
+    "idle_inhibitor",
+    "custom/dnd",
+    "clock",
+    "custom/weather",
+    "custom/updates"
+  ],
+  "modules-right": [
+    "tray",
+    "bluetooth",
+    "network",
+    "wireplumber",
+    "custom/power"
+  ],
+  "custom/menu": {
+    "format": "",
+    "tooltip-format": "Menu (right-click: power)",
+    "on-click": "labs-menu",
+    "on-click-right": "@HOME@/.config/waybar/scripts/power-menu.sh"
+  },
+  "hyprland/workspaces": {
+    "format": "{name}",
+    "on-click": "activate",
+    "persistent-workspaces": {
+      "*": 5
+    }
+  },
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "format-icons": {
+      "activated": "󰅶",
+      "deactivated": ""
+    },
+    "tooltip-format-activated": "Idle inhibited (click to allow sleep)",
+    "tooltip-format-deactivated": "Idle allowed"
+  },
+  "custom/dnd": {
+    "exec": "@HOME@/.config/waybar/scripts/dnd.sh",
+    "return-type": "json",
+    "interval": "once",
+    "signal": 8,
+    "on-click": "makoctl mode -t do-not-disturb >/dev/null; pkill -RTMIN+8 waybar"
+  },
+  "clock": {
+    "format": "{:%A %H:%M}",
+    "format-alt": "{:%d %B W%V %Y}",
+    "tooltip-format": "<tt>{calendar}</tt>",
+    "calendar": {
+      "mode": "month",
+      "weeks-pos": "left",
+      "format": {
+        "today": "<span color='#7aa2f7'><b>{}</b></span>"
+      }
+    }
+  },
+  "custom/weather": {
+    "exec": "@HOME@/.config/waybar/scripts/weather.sh",
+    "return-type": "json",
+    "interval": 900,
+    "on-click": "xdg-open https://wttr.in 2>/dev/null"
+  },
+  "custom/updates": {
+    "exec": "@HOME@/.config/waybar/scripts/updates.sh",
+    "return-type": "json",
+    "interval": 3600,
+    "signal": 9,
+    "on-click": "kitty -e sh -c 'sudo pacman -Syu; read -p \"Done - press enter\"'; pkill -RTMIN+9 waybar"
+  },
+  "tray": {
+    "icon-size": 14,
+    "spacing": 10
+  },
+  "bluetooth": {
+    "format": "",
+    "format-disabled": "󰂲",
+    "format-off": "󰂲",
+    "format-connected": "󰂱",
+    "tooltip-format": "{controller_alias} {status}",
+    "tooltip-format-connected": "{device_enumerate}"
+  },
+  "network": {
+    "format-ethernet": "󰈀",
+    "format-wifi": "{icon}",
+    "format-icons": [
+      "󰤯",
+      "󰤟",
+      "󰤢",
+      "󰤥",
+      "󰤨"
+    ],
+    "format-disconnected": "󰪎",
+    "tooltip-format-ethernet": "{ifname} {ipaddr}",
+    "tooltip-format-wifi": "{essid} {signalStrength}%  {ipaddr}",
+    "tooltip-format-disconnected": "Disconnected"
+  },
+  "wireplumber": {
+    "format": "{icon}",
+    "format-muted": "󰝟",
+    "format-icons": [
+      "󰕿",
+      "󰖀",
+      "󰕾"
+    ],
+    "tooltip-format": "{node_name} {volume}%",
+    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "on-scroll-up": "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+",
+    "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+  },
+  "custom/power": {
+    "format": "⏻",
+    "tooltip-format": "Power menu",
+    "on-click": "@HOME@/.config/waybar/scripts/power-menu.sh"
+  }
+}

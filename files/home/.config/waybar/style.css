@@ -1,0 +1,20 @@
+/* colours come from the current labs-theme (Omarchy themes); change with labs-theme-pick */
+@import url("file://@HOME@/.local/state/labs-theme/current/waybar.css");
+* { font-family: "JetBrainsMono Nerd Font"; font-size: 12px; min-height: 0; border: none; border-radius: 0; }
+window#waybar { background: @background; color: @foreground; }
+tooltip { background: @background; border: 1px solid @accent; }
+tooltip label { color: @bright_foreground; }
+#custom-menu { color: @accent; font-size: 15px; padding: 0 12px 0 10px; }
+#workspaces button { color: @dark_foreground; padding: 0 6px; background: transparent; }
+#workspaces button.active { color: @bright_foreground; }
+#workspaces button.empty { color: @muted; }
+#workspaces button:hover { background: @lighter_background; color: @bright_foreground; }
+#idle_inhibitor, #custom-dnd, #clock, #custom-weather, #custom-updates,
+#tray, #bluetooth, #network, #wireplumber, #custom-power { padding: 0 8px; color: @foreground; }
+#idle_inhibitor.activated { color: @orange; }
+#custom-dnd.on { color: @red; }
+#clock { color: @bright_foreground; }
+#custom-updates.pending { color: @accent; }
+#wireplumber.muted { color: @dark_foreground; }
+#network.disconnected { color: @red; }
+#custom-power { color: @red; padding-right: 12px; }

@@ -1,0 +1,17 @@
+# The Hyprland desktop, Omarchy-style bar and theme system (any GUI profile).
+hyprland
+waybar
+wofi
+foot
+kitty
+mako
+libnotify
+swaybg
+pipewire
+pipewire-pulse
+wireplumber
+pacman-contrib
+xdg-utils
+ttf-jetbrains-mono-nerd
+otf-font-awesome
+ttf-liberation

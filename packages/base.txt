@@ -1,0 +1,18 @@
+# Every machine. One package per line; '#' comments allowed. Installed with pacman --needed.
+base-devel
+git
+vim
+openssh
+sudo
+rsync
+curl
+jq
+ufw
+tailscale
+# shell profile (files/home/.zshrc)
+zsh
+zsh-autosuggestions
+zsh-syntax-highlighting
+starship
+zoxide
+fzf

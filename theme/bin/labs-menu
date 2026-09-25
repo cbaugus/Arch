@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# The Omarchy menu, rebuilt: apps / theme / power.
+c=$(printf '%s\n' "󰀻  Apps" "  Theme" "  Terminal" "⏻  Power" | wofi --dmenu --prompt Menu --width 260 --lines 4 --hide-scroll --cache-file /dev/null) || exit 0
+case "$c" in
+  *Apps)     wofi --show drun ;;
+  *Theme)    labs-theme-pick ;;
+  *Terminal) foot ;;
+  *Power)    ~/.config/waybar/scripts/power-menu.sh ;;
+esac

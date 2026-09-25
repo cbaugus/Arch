@@ -1,0 +1,14 @@
+labs-theme: Omarchy's theme system, rebuilt so it runs on a plain Arch install.
+
+From Omarchy (https://omarchy.org, https://github.com/basecamp/omarchy), MIT,
+Copyright (c) David Heinemeier Hansson. Full text in LICENSE.omarchy.
+  themes/                 the 22 stock themes (colors.toml, backgrounds, previews)
+  bin/theme-color         Omarchy's colors.toml parser (omarchy-theme-color)
+  bin/theme-render        Omarchy's template renderer (omarchy-theme-set-templates),
+                          with its paths pointed at /usr/local/share/labs-theme
+  themed/{kitty.conf,foot.ini,hyprland.lua}.tpl   Omarchy's templates
+Ours: bin/labs-theme-set, bin/labs-theme-pick, bin/labs-menu, and
+themed/{waybar.css,mako,wofi.css}.tpl.
+Captured from Omarchy 4.0.4 on 2026-09-25 so a new machine never needs an
+Omarchy install to pull them from. This repo is private; the wallpapers are for
+personal use.

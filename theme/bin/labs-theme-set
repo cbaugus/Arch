@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# labs-theme-set <theme> -- Omarchy's theme mechanism, rebuilt for this machine.
+# Themes are Omarchy's (colors.toml + backgrounds + preview.png, MIT). Templates
+# in /usr/local/share/labs-theme/themed (or ~/.config/labs-theme/themed to
+# override) are rendered by Omarchy's own renderer, then each app is reloaded.
+set -euo pipefail
+cd "$HOME" 2>/dev/null || cd /   # never depend on the caller's cwd (sudo -u from /root broke find)
+P=/usr/local/share/labs-theme
+name=$(printf '%s' "${1:?usage: labs-theme-set <theme>}" | sed -E 's/<[^>]+>//g' | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+src="$HOME/.config/labs-theme/themes/$name"; [ -d "$src" ] || src="$P/themes/$name"
+[ -f "$src/colors.toml" ] || { echo "no such theme: $name" >&2; exit 1; }
+S="$HOME/.local/state/labs-theme"; mkdir -p "$S"
+next="$S/next"; rm -rf "$next"; mkdir -p "$next"
+cp "$src/colors.toml" "$next/"; [ -f "$src/preview.png" ] && cp "$src/preview.png" "$next/"
+"$P/bin/theme-render" "$next" >/dev/null
+bg=$(find -L "$src/backgrounds" -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) 2>/dev/null | sort | sed -n 1p)
+[ -n "$bg" ] && ln -sfn "$bg" "$next/background"
+echo "$name" > "$next/name"
+rm -rf "$S/current.old"; [ -d "$S/current" ] && mv "$S/current" "$S/current.old"; mv "$next" "$S/current"; rm -rf "$S/current.old"
+C="$S/current"
+# point each app at the rendered files (idempotent)
+mkdir -p ~/.config/mako ~/.config/wofi ~/.config/foot ~/.config/kitty
+ln -sfn "$C/mako"      ~/.config/mako/config
+ln -sfn "$C/wofi.css"  ~/.config/wofi/style.css
+grep -qs 'labs-theme/current/foot.ini' ~/.config/foot/foot.ini || printf '[main]\ninclude=%s\n' "$C/foot.ini" >> ~/.config/foot/foot.ini
+grep -qs 'labs-theme/current/kitty.conf' ~/.config/kitty/kitty.conf || printf '\ninclude %s\n' "$C/kitty.conf" >> ~/.config/kitty/kitty.conf
+# reload whatever is running in this session
+pkill -SIGUSR2 -x waybar 2>/dev/null || true          # waybar re-reads style.css
+makoctl reload 2>/dev/null || true
+pkill -SIGUSR1 -x kitty 2>/dev/null || true            # kitty reloads config
+hyprctl reload >/dev/null 2>&1 || true                 # borders (hyprland.lua dofile's current/hyprland.lua)
+if [ -e "$C/background" ]; then pkill -x swaybg 2>/dev/null || true; setsid -f swaybg -m fill -i "$C/background" >/dev/null 2>&1; fi
+notify-send -a labs-theme "Theme" "$name" 2>/dev/null || true
+echo "theme: $name"
