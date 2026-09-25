@@ -73,8 +73,8 @@ Options (after `bash -s --`): `--user NAME`, `--theme NAME` (default `tokyo-nigh
 - Commit, push, and re-run the curl line (or `./install.sh`) on each machine.
 
 ## Verified
-tower1, 2026-09-25: a full run on the freshly reinstalled machine. That covered
-pacman, google-chrome from the AUR, the theme kit, configs, and the virtual display
-plus wayvnc (handshake OK over the tailnet). A second run was a no-op:
-pacman had nothing to do, and no file changed. Live theme switching was also
-verified: borders, bar and wallpaper followed.
+tower1, 2026-09-25: a full run on a freshly reinstalled machine covered pacman,
+google-chrome from the AUR, the theme kit, configs, and the virtual display plus
+wayvnc (handshake OK over the tailnet). A second run was a no-op, and live theme
+switching was verified. The same day, the curl one-liner was run as root with no
+options: it picked the only regular user and finished with the services active.
