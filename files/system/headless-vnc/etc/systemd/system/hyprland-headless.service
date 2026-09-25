@@ -14,7 +14,7 @@ Group=@USER@
 # systemd-logind based on login session lifetime. Tying this always-on
 # compositor to that path would risk logind removing it out from under
 # the service the moment an unrelated SSH session for that user ends.
-# Declared in /etc/tmpfiles.d/labs-vnc.conf (installed by install.sh).
+# Declared in /etc/tmpfiles.d/labs-vnc.conf (installed by setup.sh).
 Environment=XDG_RUNTIME_DIR=/run/@USER@-vnc
 Environment=WAYLAND_DISPLAY=wayland-1
 Environment=HOME=@HOME@

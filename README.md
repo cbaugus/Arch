@@ -10,18 +10,20 @@ tailnet. Nothing depends on an Omarchy machine to copy from.
 2. For the default `headless-vnc` profile, join the tailnet first:
    `sudo pacman -S tailscale && sudo systemctl enable --now tailscaled && sudo tailscale up`.
    (You can do it afterwards and re-run step 3; the VNC part waits for it.)
-3. Logged in as that user:
+3. As your user (it asks for your sudo password) or as root on a minimal box:
    ```sh
-   curl -fsSL https://raw.githubusercontent.com/cbaugus/Arch/main/get.sh | sudo bash
+   curl -fsSL https://raw.githubusercontent.com/cbaugus/Arch/main/install.sh | bash
    ```
    For a machine with a real screen:
    ```sh
-   curl -fsSL https://raw.githubusercontent.com/cbaugus/Arch/main/get.sh | sudo bash -s -- --profile desktop
+   curl -fsSL https://raw.githubusercontent.com/cbaugus/Arch/main/install.sh | bash -s -- --profile desktop
    ```
 
-`get.sh` installs git if needed, clones this repo into `/usr/local/src/cbaugus-arch`
-(or updates it), and runs `install.sh` with your options. From a clone you can run
-`sudo ./install.sh [options]` directly.
+`install.sh` elevates with sudo if needed, installs git, clones this repo into
+`/usr/local/src/cbaugus-arch` (or updates it) and runs `setup.sh`, which does the
+work. From a clone, `./install.sh [options]` uses that clone as it is.
+Run as root, it sets up the only regular user; if there are none or several, create
+one (`useradd -m -G wheel NAME && passwd NAME`) or pass `--user NAME`.
 
 The script prompts once, for the wayvnc password, which is never stored in the repo.
 Re-running it is safe and is how you pick up changes: packages are `--needed`, a
@@ -35,7 +37,7 @@ touched.
 | `headless-vnc` (default) | Hyprland on a virtual 1920x1080 display, reached **only over the tailnet** with wayvnc (`<tailnet-ip>:5900`). For machines with no monitor. |
 | `desktop` | Packages, bar, themes and shell only; no VNC services. |
 
-Options: `--user NAME`, `--theme NAME` (default `tokyo-night`), `--no-aur`.
+Options (after `bash -s --`): `--user NAME`, `--theme NAME` (default `tokyo-night`), `--no-aur`.
 
 ## What it sets up
 - **Packages**: `packages/{base,desktop,headless-vnc}.txt` from pacman, and
@@ -68,7 +70,7 @@ Options: `--user NAME`, `--theme NAME` (default `tokyo-night`), `--no-aur`.
 - A dotfile goes under `files/home/` at the path it has in `$HOME`. `@HOME@`,
   `@USER@` and `@TSIP@` are substituted when it's deployed.
 - A system file for a profile goes under `files/system/<profile>/`.
-- Commit, push, and re-run the curl line (or `sudo ./install.sh`) on each machine.
+- Commit, push, and re-run the curl line (or `./install.sh`) on each machine.
 
 ## Verified
 tower1, 2026-09-25: a full run on the freshly reinstalled machine. That covered

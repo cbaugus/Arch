@@ -126,7 +126,7 @@ fi
 # alias p='python'
 
 # Secrets (API keys, tokens) never go in this file, which is public in git.
-# Put them in ~/.zshrc.local, which install.sh never touches.
+# Put them in ~/.zshrc.local, which setup.sh never touches.
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 
 # >>> Codex installer >>>
